@@ -19,6 +19,8 @@ class Miner(BaseGameEntity):
     def __init__(self, id):
         BaseGameEntity.__init__(self, id)
         self._curState = GoHomeAndSleepState() 
+        self._prevState = None 
+        self._globeState = None 
         self._location = -1
         self._iGoldCarried = 0
         self._iMoneyInBank = 0
@@ -34,8 +36,12 @@ class Miner(BaseGameEntity):
         assert(self._curState)
         assert(newState)
         self._curState.exit(self)
+        self._prevState = self._curState
         self._curState = newState
         self._curState.enter(self)
+
+    def revertToPrevState(self):
+        changeState(self._prevState)
 
     def addToGoldCarried(self, i):
         self._iGoldCarried += i
